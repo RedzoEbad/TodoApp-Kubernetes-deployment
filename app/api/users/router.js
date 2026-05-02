@@ -3,7 +3,10 @@ const Todo = require('../../../models/Todo');
 
 module.exports = async function handler(req, res) {
 	try {
-		await dbConnect();
+		await dbConnect().catch(err => {
+			console.error('Database connection failed:', err);
+			throw new Error('Database connection failed');
+		});
 
 		if (req.method === 'GET') {
 			const todos = await Todo.find().sort({ createdAt: -1 }).limit(100).lean();

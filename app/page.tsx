@@ -158,7 +158,7 @@ export default function Home() {
                         <span style={{ textDecoration: todo.done ? 'line-through' : 'none' }}>{todo.text}</span>
                       )}
                     </td>
-                    <td style={styles.td}>{todo.createdAt ? new Date(todo.createdAt).toLocaleString() : '-'}</td>
+                    <td style={styles.td}>{todo.createdAt ? new Date(todo.createdAt).toLocaleDateString() : '-'}</td>
                     <td style={styles.td}>
                       <input type="checkbox" checked={todo.done} onChange={() => toggle(todo.id)} />
                     </td>
