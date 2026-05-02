@@ -1,45 +1,51 @@
-# validation - > It means checking your code build , error like have to left some tags or you have left errors etc so this is the basic need of validation 
-# so it is used so that before going to deployment phase it should be clean no error and bugs 
-# it should clean from bugs , errors passed all test cases 
+# validation -> Code ko check karna (errors, bugs, test pass hona)
+# goal: deployment se pehle code clean ho
 
-# Workflow (CI pipeline)
-#  └── Job: validate
-#       ├── checkout code
-#       ├── install dependencies
-#       ├── run tests
+#  push → checkout → setup node → install → lint yaml → lint code → test → sonar scan
 
-# job 1 = test
-# job 2 = build
-# job 3 = deploy
 on:
-  push:
+  push:   # jab bhi code push hoga tab pipeline run hogi
 
-jobs:   # // is job ka andar boaht sara steps hote hain jo aik vm mai run hota hain ap is ka andar sara steps define karta ho  
-  validate:
-    runs-on: ubuntu-latest
-    steps:   
-      - uses: actions/checkout@v4   # // uses ka matlab hai ke hum ready-made tool use kar rahe hain jo GitHub ya community ne banaya hai.
-      - uses: actions/setup-node@v4  # // ye step vm mai node js install kara ga ta ka js chal saka 
-        with:       # e us tool ko extra information dene ke liye hota hai.
-          node-version: '20'  
-          |
-          |
-# ⚙️ 3. What happens internally (backend story)
+jobs:
+  validate:   # ye ek job hai jisme multiple steps run honge
+    runs-on: ubuntu-latest   # GitHub ek virtual machine (Linux) provide karega
 
-# When this runs:
+    steps:
+      # Step 1: Repository ka latest code VM me lana
+      - uses: actions/checkout@v4  
+      # uses = ready-made GitHub action use karna
 
-# GitHub creates Ubuntu VM
-# checkout brings your code inside VM
-# setup-node runs
-# It downloads Node.js binary from official source
-# Installs it inside VM
-# Sets environment PATH
-# Now node and npm commands work
+      # Step 2: Node.js environment setup karna
+      - uses: actions/setup-node@v4  
+        with:
+          node-version: '20'   # Node.js version define
 
-# 👉 After this:
+      # Step 3: Project dependencies install karna
+      - name: Install dependencies
+        run: npm ci  
+      # npm ci = fast & clean install (production best practice)
 
-# VM can run JavaScript code
-# npm install works
-# tests can run
+      # Step 4: YAML file syntax check karna
+      - name: YAML Lint
+        uses: ibiqlik/action-yamllint@v3  
+      # ye check karega ke YAML file sahi likhi hai ya nahi
 
+      # Step 5: Code linting (ESLint)
+      - name: Code Linting
+        run: npm run lint  
+      # errors check: undefined variable, missing semicolon, etc.
 
+      # Step 6: Run test cases
+      - name: Run tests
+        run: npm test  
+      # check karta hai ke code sahi kaam kar raha hai ya nahi
+
+      # Step 7: SonarQube scan (advanced validation + security)
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+          # GitHub secret (secure token)
+
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  
+          # SonarQube server ka URL
