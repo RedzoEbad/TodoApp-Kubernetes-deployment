@@ -16,10 +16,7 @@ jobs:
         run: npm ci
 
       - name: YAML Lint
-        uses: ibiqlik/action-yamllint@v3
-        with:
-          file_or_dir: .github/workflows
-          config_file: .yamllint
+        run : yamllint -d .yamllint .github/workflows
 
       - name: Code Linting
         run: npm run lint
