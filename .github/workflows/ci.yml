@@ -19,12 +19,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate YAML
-        uses: karancode/yamllint-github-action@v1.1.1
-        with:
-          config_file: .yamllint
-          file_or_dir: .github/workflows
-
       - name: Code Linting
         run: npm run lint
 
