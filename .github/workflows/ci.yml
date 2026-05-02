@@ -1,51 +1,54 @@
+---
 # validation -> Code ko check karna (errors, bugs, test pass hona)
 # goal: deployment se pehle code clean ho
 
-#  push → checkout → setup node → install → lint yaml → lint code → test → sonar scan
+# flow: push → checkout → setup node → install → lint yaml → lint code → test → sonar scan
 
 on:
-  push:   # jab bhi code push hoga tab pipeline run hogi
+  push:  # jab bhi code push hoga tab pipeline run hogi
 
 jobs:
-  validate:   # ye ek job hai jisme multiple steps run honge
-    runs-on: ubuntu-latest   # GitHub ek virtual machine (Linux) provide karega
+  validate:  # ye ek job hai jisme multiple steps run honge
+    runs-on: ubuntu-latest  # GitHub ek virtual machine (Linux) provide karega
 
     steps:
       # Step 1: Repository ka latest code VM me lana
-      - uses: actions/checkout@v4  
+      - uses: actions/checkout@v4
       # uses = ready-made GitHub action use karna
 
       # Step 2: Node.js environment setup karna
-      - uses: actions/setup-node@v4  
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'   # Node.js version define
+          node-version: "20"  # Node.js version define
 
       # Step 3: Project dependencies install karna
       - name: Install dependencies
-        run: npm ci  
+        run: npm ci
       # npm ci = fast & clean install (production best practice)
 
-      # Step 4: YAML file syntax check karna
+      # Step 4: YAML file syntax check karna (only workflow folder)
       - name: YAML Lint
-        uses: ibiqlik/action-yamllint@v3  
-      # ye check karega ke YAML file sahi likhi hai ya nahi
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .github/workflows
+      # sirf apni CI files check karega (node_modules ignore)
 
       # Step 5: Code linting (ESLint)
       - name: Code Linting
-        run: npm run lint  
+        run: npm run lint
       # errors check: undefined variable, missing semicolon, etc.
 
       # Step 6: Run test cases
       - name: Run tests
-        run: npm test  
+        run: npm test
       # check karta hai ke code sahi kaam kar raha hai ya nahi
 
       # Step 7: SonarQube scan (advanced validation + security)
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v2
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           # GitHub secret (secure token)
 
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           # SonarQube server ka URL
