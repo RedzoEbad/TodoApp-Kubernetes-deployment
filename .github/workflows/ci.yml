@@ -9,6 +9,34 @@ jobs:
   validate:
     runs-on: ubuntu-latest
 
+    services:
+      sonarqube:
+        image: sonarqube:community
+        env:
+          SONAR_ES_JAVA_OPTS: "-Xmx512m -Xms512m"
+          SONAR_JDBC_URL: "jdbc:postgresql://postgres:5432/sonar"
+          SONAR_JDBC_USERNAME: "sonar"
+          SONAR_JDBC_PASSWORD: "sonar"
+        ports:
+          - 9000:9000
+        options: >-
+          --health-cmd "curl -f http://localhost:9000/api/system/status"
+          --health-interval 30s
+          --health-timeout 10s
+          --health-retries 5
+      
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: sonar
+          POSTGRES_PASSWORD: sonar
+          POSTGRES_DB: sonar
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -25,8 +53,29 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Wait for SonarQube to start
+        run: |
+          echo "Waiting for SonarQube to be ready..."
+          for i in {1..30}; do
+            if curl -f http://localhost:9000/api/system/status | grep -q "UP"; then
+              echo "SonarQube is ready!"
+              break
+            fi
+            echo "Attempt $i: SonarQube not ready yet..."
+            sleep 10
+          done
+
+      - name: Generate SonarQube Token
+        run: |
+          echo "Generating admin token..."
+          TOKEN=$(curl -X POST -u admin:admin \
+            -F "name=github-action-token" \
+            http://localhost:9000/api/user_tokens/generate | \
+            jq -r '.token')
+          echo "SONAR_TOKEN=$TOKEN" >> $GITHUB_ENV
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v2
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+          SONAR_HOST_URL: http://localhost:9000
