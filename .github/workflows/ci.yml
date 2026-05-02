@@ -1,5 +1,9 @@
+---
+name: CI Pipeline
+
 on:
   push:
+    branches: [ main, master ]
 
 jobs:
   validate:
@@ -16,7 +20,7 @@ jobs:
         run: npm ci
 
       - name: YAML Lint
-        run : yamllint -d .yamllint .github/workflows
+        run: yamllint -d .yamllint .github/workflows
 
       - name: Code Linting
         run: npm run lint
