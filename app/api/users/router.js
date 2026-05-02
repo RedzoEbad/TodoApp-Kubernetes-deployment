@@ -1,7 +1,7 @@
-const { dbConnect } = require('../../../lib/mongoose');
-const Todo = require('../../../models/Todo');
+import { dbConnect } from '../../../lib/mongoose.js';
+import Todo from '../../../models/Todo.js';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
 	try {
 		// Add timeout to the database connection
 		const connectionPromise = dbConnect();

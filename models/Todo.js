@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const TodoSchema = new mongoose.Schema(
   {
@@ -10,6 +10,6 @@ const TodoSchema = new mongoose.Schema(
 );
 
 // Avoid model overwrite issues during hot-reload / serverless function re-invocations
-module.exports = mongoose.models && mongoose.models.Todo
+export default mongoose.models && mongoose.models.Todo
   ? mongoose.models.Todo
   : mongoose.model('Todo', TodoSchema);

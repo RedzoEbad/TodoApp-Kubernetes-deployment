@@ -68,7 +68,7 @@ export async function DELETE(req) {
     try {
       const body = await req.json();
       bodyId = body && body.id;
-    } catch (e) {
+    } catch {
       /* ignore empty body */
     }
     const useId = id || bodyId;

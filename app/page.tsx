@@ -15,17 +15,13 @@ export default function Home() {
     if (editingId != null) editRef.current?.focus();
   }, [editingId]);
 
-  useEffect(() => {
-    fetchTodos();
-  }, []);
-
-  async function fetchTodos() {
+  const fetchTodos = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch('/api/users/router');
       const json = await res.json();
       if (json && json.ok) {
-        const items: Todo[] = json.todos.map((t: any) => ({ id: t._id, _id: t._id, text: t.text, done: !!t.done, createdAt: t.createdAt }));
+        const items: Todo[] = json.todos.map((t: Todo) => ({ id: t._id, _id: t._id, text: t.text, done: !!t.done, createdAt: t.createdAt }));
         setTodos(items);
       } else if (json && json.retryable) {
         // Retry after a delay for retryable errors
@@ -38,7 +34,11 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    fetchTodos();
+  }, [fetchTodos]);
 
   const addTodo = useCallback(async () => {
     const text = value.trim();
@@ -204,7 +204,7 @@ export default function Home() {
   );
 }
 
-const styles: Record<string, any> = {
+const styles: Record<string, React.CSSProperties> = {
   page: {
     minHeight: "100vh",
     display: "flex",
