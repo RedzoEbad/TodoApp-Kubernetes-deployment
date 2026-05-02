@@ -1,0 +1,45 @@
+ - > so sab sa phela hum na aik file banai ci.yml
+ - > then hum na is file mai workflow likhna start kar diya 
+ - > then hum na on define kiya jis mai hum ya batata hain ka ap kis baat par run karana chata ho 
+ - > like push , pull request etc
+ - > then hum na jobs define kiya jis mai hum ya batata hain ka ap kya kya kaam karana chata ho  
+ - > like test , build , deploy etc
+ - > like validate , build , test ye sab aik job hain is ka andar hum small action ya task define karta hain
+ - > hum na runons likha ta ka hamari vm par aik ubuntu install mila .
+ - > then hum na steps define kiya ka sab sa phela cehckout karo then install karo dependencies then run karo test then build then deploy
+ - > ⚙️ 3. What happens internally (backend story)
+# GitHub creates Ubuntu VM
+# checkout brings your code inside VM
+# setup-node runs
+# It downloads Node.js binary from official source
+# Installs it inside VM
+# Sets environment PATH
+# Now node and npm commands work
+
+# 👉 After this:
+
+# VM can run JavaScript code
+# npm install works
+# tests can run
+
+Install dependencies (npm install / pip install)
+- > is part ka andar jitni bhi external libraired hai woh sab kuch install karni hai jo hamra code ko chalna ka liya kaam ati hain . 
+- > express , react etc jitni bhi hain wo install hongi ta ka wo code chal sake
+⚙️ 3. What is happening here (simple flow)
+VM starts 🖥️
+Code is downloaded (checkout)
+Node.js is installed (setup-node)
+Now this step runs:
+
+👉 npm ci
+
+It will:
+
+read package.json
+download all required packages
+create node_modules
+
+
+--------------------------------------------------------
+
+

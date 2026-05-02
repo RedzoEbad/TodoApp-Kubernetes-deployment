@@ -1,0 +1,45 @@
+# validation - > It means checking your code build , error like have to left some tags or you have left errors etc so this is the basic need of validation 
+# so it is used so that before going to deployment phase it should be clean no error and bugs 
+# it should clean from bugs , errors passed all test cases 
+
+# Workflow (CI pipeline)
+#  └── Job: validate
+#       ├── checkout code
+#       ├── install dependencies
+#       ├── run tests
+
+# job 1 = test
+# job 2 = build
+# job 3 = deploy
+on:
+  push:
+
+jobs:   # // is job ka andar boaht sara steps hote hain jo aik vm mai run hota hain ap is ka andar sara steps define karta ho  
+  validate:
+    runs-on: ubuntu-latest
+    steps:   
+      - uses: actions/checkout@v4   # // uses ka matlab hai ke hum ready-made tool use kar rahe hain jo GitHub ya community ne banaya hai.
+      - uses: actions/setup-node@v4  # // ye step vm mai node js install kara ga ta ka js chal saka 
+        with:       # e us tool ko extra information dene ke liye hota hai.
+          node-version: '20'  
+          |
+          |
+# ⚙️ 3. What happens internally (backend story)
+
+# When this runs:
+
+# GitHub creates Ubuntu VM
+# checkout brings your code inside VM
+# setup-node runs
+# It downloads Node.js binary from official source
+# Installs it inside VM
+# Sets environment PATH
+# Now node and npm commands work
+
+# 👉 After this:
+
+# VM can run JavaScript code
+# npm install works
+# tests can run
+
+

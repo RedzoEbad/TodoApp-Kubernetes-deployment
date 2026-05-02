@@ -3,10 +3,13 @@ const Todo = require('../../../models/Todo');
 
 module.exports = async function handler(req, res) {
 	try {
-		await dbConnect().catch(err => {
-			console.error('Database connection failed:', err);
-			throw new Error('Database connection failed');
-		});
+		// Add timeout to the database connection
+		const connectionPromise = dbConnect();
+		const timeoutPromise = new Promise((_, reject) => 
+			setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+		);
+		
+		await Promise.race([connectionPromise, timeoutPromise]);
 
 		if (req.method === 'GET') {
 			const todos = await Todo.find().sort({ createdAt: -1 }).limit(100).lean();
@@ -50,6 +53,22 @@ module.exports = async function handler(req, res) {
 		return res.status(405).end(`Method ${req.method} Not Allowed`);
 	} catch (err) {
 		console.error('API router error:', err);
+		
+		// If it's a database connection error, return a more specific message
+		if (err.message && err.message.includes('timeout')) {
+			return res.status(503).json({ 
+				error: 'Database connection timeout. Please try again.',
+				retryable: true 
+			});
+		}
+		
+		if (err.message && err.message.includes('Database connection failed')) {
+			return res.status(503).json({ 
+				error: 'Database connection failed. Please try again.',
+				retryable: true 
+			});
+		}
+		
 		return res.status(500).json({ error: 'Internal server error' });
 	}
 };
