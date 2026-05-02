@@ -1,9 +1,3 @@
-# validation -> Code ko check karna (errors, bugs, test pass hona)
-# goal: deployment se pehle code clean ho
-
-# push → checkout → setup node → install
-# → lint yaml → lint code → test → sonar scan
-
 on:
   push:
 
@@ -25,6 +19,7 @@ jobs:
         uses: ibiqlik/action-yamllint@v3
         with:
           file_or_dir: .github/workflows
+          config_file: .yamllint
 
       - name: Code Linting
         run: npm run lint
