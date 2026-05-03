@@ -10,24 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # ✅ Checkout with full history
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      # Node setup
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      # Install deps
       - name: Install dependencies
         run: npm ci
 
+      # Lint
       - name: Code Linting
         run: npm run lint
 
+      # Tests
       - name: Run tests
         run: npm test
 
-      - name: SonarQube Scan
+      # ✅ SonarCloud Scan
+      - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v2
-        continue-on-error: true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
