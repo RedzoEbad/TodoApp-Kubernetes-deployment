@@ -23,23 +23,16 @@ export default function Home() {
       if (json && json.ok) {
         const items: Todo[] = json.todos.map((t: Todo) => ({ id: t._id, _id: t._id, text: t.text, done: !!t.done, createdAt: t.createdAt }));
         setTodos(items);
-      } else if (json && json.retryable) {
-        // Retry after a delay for retryable errors
-        setTimeout(fetchTodos, 2000);
-        return;
       }
     } catch (err) {
       console.error('fetchTodos error', err);
-      // Retry after a delay for network errors
-      setTimeout(fetchTodos, 3000);
-      return;
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchTodos();
+    setTimeout(fetchTodos, 0);
   }, [fetchTodos]);
 
   const addTodo = useCallback(async () => {
@@ -52,16 +45,9 @@ export default function Home() {
         const t = json.todo;
         setTodos((s) => [{ id: t._id, _id: t._id, text: t.text, done: !!t.done, createdAt: t.createdAt }, ...s]);
         setValue('');
-      } else if (json && json.retryable) {
-        // Retry after delay
-        setTimeout(addTodo, 2000);
-        return;
       }
     } catch (err) {
       console.error('addTodo error', err);
-      // Retry after delay
-      setTimeout(addTodo, 3000);
-      return;
     }
   }, [value]);
 
@@ -73,16 +59,9 @@ export default function Home() {
       const json = await res.json();
       if (json && json.ok) {
         setTodos((t) => t.map((x) => (x.id === id ? { ...x, done: !!json.todo.done } : x)));
-      } else if (json && json.retryable) {
-        // Retry after delay
-        setTimeout(toggle.bind(null, id), 2000);
-        return;
       }
     } catch (err) {
       console.error('toggle error', err);
-      // Retry after delay
-      setTimeout(toggle.bind(null, id), 3000);
-      return;
     }
   }, [todos]);
 
@@ -92,16 +71,9 @@ export default function Home() {
       const json = await res.json();
       if (json && json.ok) {
         setTodos((t) => t.filter((x) => x.id !== id));
-      } else if (json && json.retryable) {
-        // Retry after delay
-        setTimeout(remove.bind(null, id), 2000);
-        return;
       }
     } catch (err) {
       console.error('delete error', err);
-      // Retry after delay
-      setTimeout(remove.bind(null, id), 3000);
-      return;
     }
   }, []);
 
@@ -115,16 +87,9 @@ export default function Home() {
       const json = await res.json();
       if (json && json.ok) {
         setTodos((t) => t.map((x) => (x.id === id ? { ...x, text: json.todo.text } : x)));
-      } else if (json && json.retryable) {
-        // Retry after delay
-        setTimeout(saveEdit.bind(null, id, text), 2000);
-        return;
       }
     } catch (err) {
       console.error('saveEdit error', err);
-      // Retry after delay
-      setTimeout(saveEdit.bind(null, id, text), 3000);
-      return;
     } finally {
       setEditingId(null);
     }
