@@ -75,13 +75,13 @@ export default function Home() {
         setTodos((t) => t.map((x) => (x.id === id ? { ...x, done: !!json.todo.done } : x)));
       } else if (json && json.retryable) {
         // Retry after delay
-        setTimeout(() => toggle(id), 2000);
+        setTimeout(toggle.bind(null, id), 2000);
         return;
       }
     } catch (err) {
       console.error('toggle error', err);
       // Retry after delay
-      setTimeout(() => toggle(id), 3000);
+      setTimeout(toggle.bind(null, id), 3000);
       return;
     }
   }, [todos]);
@@ -94,13 +94,13 @@ export default function Home() {
         setTodos((t) => t.filter((x) => x.id !== id));
       } else if (json && json.retryable) {
         // Retry after delay
-        setTimeout(() => remove(id), 2000);
+        setTimeout(remove.bind(null, id), 2000);
         return;
       }
     } catch (err) {
       console.error('delete error', err);
       // Retry after delay
-      setTimeout(() => remove(id), 3000);
+      setTimeout(remove.bind(null, id), 3000);
       return;
     }
   }, []);
@@ -117,13 +117,13 @@ export default function Home() {
         setTodos((t) => t.map((x) => (x.id === id ? { ...x, text: json.todo.text } : x)));
       } else if (json && json.retryable) {
         // Retry after delay
-        setTimeout(() => saveEdit(id, text), 2000);
+        setTimeout(saveEdit.bind(null, id, text), 2000);
         return;
       }
     } catch (err) {
       console.error('saveEdit error', err);
       // Retry after delay
-      setTimeout(() => saveEdit(id, text), 3000);
+      setTimeout(saveEdit.bind(null, id, text), 3000);
       return;
     } finally {
       setEditingId(null);
