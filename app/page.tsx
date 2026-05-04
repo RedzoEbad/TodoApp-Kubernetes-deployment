@@ -25,12 +25,14 @@ export default function Home() {
         setTodos(items);
       } else if (json && json.retryable) {
         // Retry after a delay for retryable errors
-        setTimeout(() => fetchTodos(), 2000);
+        setTimeout(fetchTodos, 2000);
+        return;
       }
     } catch (err) {
       console.error('fetchTodos error', err);
       // Retry after a delay for network errors
-      setTimeout(() => fetchTodos(), 3000);
+      setTimeout(fetchTodos, 3000);
+      return;
     } finally {
       setLoading(false);
     }
@@ -52,12 +54,14 @@ export default function Home() {
         setValue('');
       } else if (json && json.retryable) {
         // Retry after delay
-        setTimeout(() => addTodo(), 2000);
+        setTimeout(addTodo, 2000);
+        return;
       }
     } catch (err) {
       console.error('addTodo error', err);
       // Retry after delay
-      setTimeout(() => addTodo(), 3000);
+      setTimeout(addTodo, 3000);
+      return;
     }
   }, [value]);
 
@@ -72,11 +76,13 @@ export default function Home() {
       } else if (json && json.retryable) {
         // Retry after delay
         setTimeout(() => toggle(id), 2000);
+        return;
       }
     } catch (err) {
       console.error('toggle error', err);
       // Retry after delay
       setTimeout(() => toggle(id), 3000);
+      return;
     }
   }, [todos]);
 
@@ -89,11 +95,13 @@ export default function Home() {
       } else if (json && json.retryable) {
         // Retry after delay
         setTimeout(() => remove(id), 2000);
+        return;
       }
     } catch (err) {
       console.error('delete error', err);
       // Retry after delay
       setTimeout(() => remove(id), 3000);
+      return;
     }
   }, []);
 
@@ -110,11 +118,13 @@ export default function Home() {
       } else if (json && json.retryable) {
         // Retry after delay
         setTimeout(() => saveEdit(id, text), 2000);
+        return;
       }
     } catch (err) {
       console.error('saveEdit error', err);
       // Retry after delay
       setTimeout(() => saveEdit(id, text), 3000);
+      return;
     } finally {
       setEditingId(null);
     }
