@@ -42,4 +42,43 @@ create node_modules
 
 --------------------------------------------------------
 
+Add YAML syntax validation (GitHub Actions lint or yamllint)
 
+ab hum yaml file apni check kern ga ka kiya us ki sara spaces wagera sahi hain ya koi aurr masla hai 
+
+
+---------------------------------------------------------
+
+ab hum code ka andar linting add karen ga menas check karen ga kahen colon ya const , var ka issues tu nahi hain ya phir koi invlaid js code likha ho woh check karti hai ya koi undefiend varable etc so ye sab kaam is ka hai 
+If you remove ESLint:
+👉 Your JS code can have errors and CI won’t catch them
+
+If you remove yamllint:
+👉 Your workflow file can break
+
+
+---------------------------------------------------------
+
+ab hum test run kern ga 
+
+
+---------------------------------------------------------
+
+
+
+
+
+Add code formatter check (Prettier / Black / gofmt)
+
+we add this and test to just pass our test and code and eslint is used for formati like adding semin colon amkig code look peeteie react
+
+
+now we will integrate trivy scanner and synk scanner for scanning my docker image and pakages or 
+dependency problem/issues
+
+✅ Install
+✅ Lint
+✅ Test
+✅ Security (Snyk)
+✅ SonarCloud
+✅ Build
