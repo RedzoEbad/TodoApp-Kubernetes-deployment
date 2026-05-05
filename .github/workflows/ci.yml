@@ -59,13 +59,13 @@ jobs:
         env:
           MONGODB_URI: mongodb://localhost:27017/test
         run: |
+          npm run build
           npm start &
           echo "Waiting for server..."
-          
-          # Wait until API is ready
-          for i in {1..10}; do
+
+          for i in {1..15}; do
             curl -f http://localhost:3000/api/todos && break
-            echo "Waiting for API..."
+            echo "Waiting..."
             sleep 3
           done
 
