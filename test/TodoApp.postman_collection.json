@@ -10,7 +10,20 @@
       "name": "GET todos",
       "request": {
         "method": "GET",
-        "header": []
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/router",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users",
+            "router"
+          ]
+        }
       },
       "response": []
     },
@@ -21,15 +34,22 @@
           "listen": "test",
           "script": {
             "exec": [
-              "let res = pm.response.json();\r",
-              "\r",
-              "// extract todo id\r",
-              "let todoId = res.todo._id;\r",
-              "\r",
-              "// save it globally for next request\r",
-              "pm.environment.set(\"todoId\", todoId);\r",
-              "\r",
-              "console.log(\"Saved Todo ID:\", todoId);"
+              "// Check if response exists and has valid JSON\r",
+              "if (pm.response.code === 201 && pm.response.json()) {\r",
+              "  let res = pm.response.json();\r",
+              "  \r",
+              "  // extract todo id\r",
+              "  let todoId = res.todo._id;\r",
+              "  \r",
+              "  // save it globally for next request\r",
+              "  pm.environment.set(\"todoId\", todoId);\r",
+              "  \r",
+              "  console.log(\"Saved Todo ID:\", todoId);\r",
+              "} else {\r",
+              "  console.log(\"POST request failed or invalid response\");\r",
+              "  console.log(\"Response code:\", pm.response.code);\r",
+              "  console.log(\"Response body:\", pm.response.text());\r",
+              "}"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -74,8 +94,27 @@
     {
       "name": "DELETE todo",
       "request": {
-        "method": "GET",
-        "header": []
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/users/router?id={{todoId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users",
+            "router"
+          ],
+          "query": [
+            {
+              "key": "id",
+              "value": "{{todoId}}"
+            }
+          ]
+        }
       },
       "response": []
     }

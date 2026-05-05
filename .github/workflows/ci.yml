@@ -58,7 +58,11 @@ jobs:
           MONGODB_URI: mongodb://localhost:27017/test
         run: |
           npm start &
-          sleep 10
+          echo "Server starting..."
+          sleep 15
+          echo "Checking if server is running..."
+          curl -f http://localhost:3000/api/users/router || exit 1
+          echo "Server is ready!"
           
       # Install Newman (Postman runner)
       - name: Install Newman
