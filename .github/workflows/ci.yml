@@ -54,10 +54,12 @@ jobs:
 
       # ✅ Start Server
       - name: Start Server
+        env:
+          MONGODB_URI: mongodb://localhost:27017/test
         run: |
           npm start &
           sleep 10
-        
+          
       # Install Newman (Postman runner)
       - name: Install Newman
         run: npm install -g newman
