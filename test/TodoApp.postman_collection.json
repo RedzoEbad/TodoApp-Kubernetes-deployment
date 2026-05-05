@@ -10,9 +10,9 @@
       "request": {
         "method": "GET",
         "url": {
-          "raw": "{{baseUrl}}/api/todos",
+          "raw": "{{baseUrl}}/api/users/router",
           "host": ["{{baseUrl}}"],
-          "path": ["api", "todos"]
+          "path": ["api", "users", "router"]
         }
       }
     },
@@ -48,9 +48,9 @@
           "raw": "{\n  \"text\": \"New todo item\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/todos",
+          "raw": "{{baseUrl}}/api/users/router",
           "host": ["{{baseUrl}}"],
-          "path": ["api", "todos"]
+          "path": ["api", "users", "router"]
         }
       }
     },
@@ -59,9 +59,9 @@
       "request": {
         "method": "DELETE",
         "url": {
-          "raw": "{{baseUrl}}/api/todos/{{todoId}}",
+          "raw": "{{baseUrl}}/api/users/router?id={{todoId}}",
           "host": ["{{baseUrl}}"],
-          "path": ["api", "todos", "{{todoId}}"]
+          "path": ["api", "users", "router"]
         }
       }
     }
