@@ -2,30 +2,19 @@
   "info": {
     "_postman_id": "b22812b9-a5cf-48c8-b331-cf6962926a2a",
     "name": "TodoApp",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "30310918"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
       "name": "GET todos",
       "request": {
         "method": "GET",
-        "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/users/router",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "3000",
-          "path": [
-            "api",
-            "users",
-            "router"
-          ]
+          "raw": "{{baseUrl}}/api/todos",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "todos"]
         }
-      },
-      "response": []
+      }
     },
     {
       "name": "POST todo",
@@ -34,26 +23,15 @@
           "listen": "test",
           "script": {
             "exec": [
-              "// Check if response exists and has valid JSON\r",
-              "if (pm.response.code === 201 && pm.response.json()) {\r",
-              "  let res = pm.response.json();\r",
-              "  \r",
-              "  // extract todo id\r",
-              "  let todoId = res.todo._id;\r",
-              "  \r",
-              "  // save it globally for next request\r",
-              "  pm.environment.set(\"todoId\", todoId);\r",
-              "  \r",
-              "  console.log(\"Saved Todo ID:\", todoId);\r",
-              "} else {\r",
-              "  console.log(\"POST request failed or invalid response\");\r",
-              "  console.log(\"Response code:\", pm.response.code);\r",
-              "  console.log(\"Response body:\", pm.response.text());\r",
+              "let res = pm.response.json();",
+              "",
+              "// safely extract todo id",
+              "if (res && res.todo && res.todo._id) {",
+              "    pm.environment.set('todoId', res.todo._id);",
+              "    console.log('Saved Todo ID:', res.todo._id);",
               "}"
             ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
+            "type": "text/javascript"
           }
         }
       ],
@@ -62,61 +40,30 @@
         "header": [
           {
             "key": "Content-Type",
-            "value": "application/json",
-            "type": "text"
+            "value": "application/json"
           }
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"text\": \"New todo item\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
+          "raw": "{\n  \"text\": \"New todo item\"\n}"
         },
         "url": {
-          "raw": "http://localhost:3000/api/users/router",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "3000",
-          "path": [
-            "api",
-            "users",
-            "router"
-          ]
+          "raw": "{{baseUrl}}/api/todos",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "todos"]
         }
-      },
-      "response": []
+      }
     },
     {
       "name": "DELETE todo",
       "request": {
         "method": "DELETE",
-        "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/users/router?id={{todoId}}",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "3000",
-          "path": [
-            "api",
-            "users",
-            "router"
-          ],
-          "query": [
-            {
-              "key": "id",
-              "value": "{{todoId}}"
-            }
-          ]
+          "raw": "{{baseUrl}}/api/todos/{{todoId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "todos", "{{todoId}}"]
         }
-      },
-      "response": []
+      }
     }
   ]
 }

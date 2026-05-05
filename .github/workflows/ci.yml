@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ✅ Checkout full history (needed for SonarCloud)
+      # ✅ Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # ✅ Setup Node + Cache
+      # ✅ Setup Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -38,36 +38,41 @@ jobs:
       - name: Code Linting
         run: npm run lint
 
-      # ✅ Run tests
+      # ✅ Unit tests
       - name: Run tests
         run: npm test
 
-      # ✅ SonarCloud Scan
+      # ✅ SonarQube Scan
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-       # ✅ Start MongoDB     
+      # 🟢 Start MongoDB
       - name: Start MongoDB
-        run: docker run -d --name mongodb -p 27017:27017 mongo:6
+        run: |
+          docker run -d --name mongodb -p 27017:27017 mongo:6
+          sleep 5
 
-      # ✅ Start Server
+      # 🟢 Start Server
       - name: Start Server
         env:
           MONGODB_URI: mongodb://localhost:27017/test
         run: |
           npm start &
-          echo "Server starting..."
-          sleep 15
-          echo "Checking if server is running..."
-          curl -f http://localhost:3000/api/users/router || exit 1
-          echo "Server is ready!"
+          echo "Waiting for server..."
           
-      # Install Newman (Postman runner)
+          # Wait until API is ready
+          for i in {1..10}; do
+            curl -f http://localhost:3000/api/todos && break
+            echo "Waiting for API..."
+            sleep 3
+          done
+
+      # 🧪 Install Newman
       - name: Install Newman
         run: npm install -g newman
 
-      # Run API tests with Newman
+      # 🧪 Run Postman tests
       - name: Run API tests with Newman
-        run: newman run ./test/TodoApp.postman_collection.json
+        run: newman run ./test/TodoApp.postman_collection.json --env-var "baseUrl=http://localhost:3000"
