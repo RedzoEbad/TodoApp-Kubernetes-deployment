@@ -1,0 +1,83 @@
+{
+  "info": {
+    "_postman_id": "b22812b9-a5cf-48c8-b331-cf6962926a2a",
+    "name": "TodoApp",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "30310918"
+  },
+  "item": [
+    {
+      "name": "GET todos",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "POST todo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "let res = pm.response.json();\r",
+              "\r",
+              "// extract todo id\r",
+              "let todoId = res.todo._id;\r",
+              "\r",
+              "// save it globally for next request\r",
+              "pm.environment.set(\"todoId\", todoId);\r",
+              "\r",
+              "console.log(\"Saved Todo ID:\", todoId);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"text\": \"New todo item\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/users/router",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "users",
+            "router"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE todo",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}

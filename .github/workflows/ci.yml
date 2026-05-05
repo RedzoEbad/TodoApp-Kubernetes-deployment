@@ -48,4 +48,20 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-     
+       # ✅ Start MongoDB     
+      - name: Start MongoDB
+        run: docker run -d --name mongodb -p 27017:27017 mongo:6
+
+      # ✅ Start Server
+      - name: Start Server
+        run: |
+          npm start &
+          sleep 10
+        
+      # Install Newman (Postman runner)
+      - name: Install Newman
+        run: npm install -g newman
+
+      # Run API tests with Newman
+      - name: Run API tests with Newman
+        run: newman run .\test\api-tests.postman_collection.json

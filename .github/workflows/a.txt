@@ -81,4 +81,24 @@ dependency problem/issues
 ✅ Test
 ✅ Security (Snyk)
 ✅ SonarCloud
-✅ Build
+
+
+
+
+Checkout code
+   ↓
+Install dependencies
+   ↓
+Snyk scan
+   ↓
+Lint
+   ↓
+Unit tests
+   ↓
+SonarQube
+   ↓
+START DATABASE 🗄️
+   ↓
+START SERVER 🚀
+   ↓
+Run Newman tests 🧪
