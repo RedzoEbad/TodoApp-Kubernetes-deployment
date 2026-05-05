@@ -66,4 +66,4 @@ jobs:
 
       # Run API tests with Newman
       - name: Run API tests with Newman
-        run: newman run .\test\api-tests.postman_collection.json
+        run: newman run ./test/TodoApp.postman_collection.json
