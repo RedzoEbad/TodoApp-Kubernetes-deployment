@@ -64,7 +64,7 @@ jobs:
           echo "Waiting for server..."
 
           for i in {1..15}; do
-            curl -f http://localhost:3000/api/todos && break
+            curl -f http://localhost:3000/api/users/router && break
             echo "Waiting..."
             sleep 3
           done
