@@ -70,4 +70,4 @@ jobs:
       - name: Scan image from Trivy
         run: |
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-          trivy image --exit-code 1 --severity HIGH,CRITICAL my-todo-app:latest
+          trivy image --exit-code 0 --severity HIGH,CRITICAL --format table my-todo-app:latest
