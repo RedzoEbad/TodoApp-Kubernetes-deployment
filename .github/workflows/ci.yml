@@ -76,3 +76,8 @@ jobs:
       # 🧪 Run Postman tests
       - name: Run API tests with Newman
         run: newman run ./test/TodoApp.postman_collection.json --env-var "baseUrl=http://localhost:3000"
+     
+      # Build Docker image
+      - name: Build docker image
+        run: docker build -t my-todo-app .
+        
