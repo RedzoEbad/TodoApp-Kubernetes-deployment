@@ -68,7 +68,7 @@ jobs:
         run: docker build -t my-todo-app:latest .
 
       - name: Scan image from Trivy
-        uses: aquasecurity/trivy-action@v0.28.0
+        uses: aquasecurity/trivy-action@v0.27.0
         with:
           image-ref: my-todo-app:latest
           format: table
