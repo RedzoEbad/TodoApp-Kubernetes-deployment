@@ -80,4 +80,12 @@ jobs:
       # Build Docker image
       - name: Build docker image
         run: docker build -t my-todo-app .
-        
+      
+      # Scan image from Trivy
+      - name: Scan image from Trivy 
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: my-todo-app
+          format: table
+          exit-code: 1
+          severity: HIGH,CRITICAL
