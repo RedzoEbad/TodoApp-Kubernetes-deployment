@@ -89,3 +89,12 @@ jobs:
           format: table
           exit-code: 1
           severity: HIGH,CRITICAL
+
+      # Scan image from trivy    
+      - name: Scan image from Trivy 
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: my-todo-app:latest
+          format: table
+          exit-code: '1'
+          severity: HIGH,CRITICAL
