@@ -83,7 +83,7 @@ jobs:
       
       # Scan image from Trivy
       - name: Scan image from Trivy 
-        uses: aquasecurity/trivy-action@0.20.0
+        uses: aquasecurity/trivy-action@latest
         with:
           image-ref: my-todo-app
           format: table
