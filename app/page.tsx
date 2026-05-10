@@ -113,8 +113,9 @@ export default function Home() {
                 if (e.key === "Enter") addTodo();
               }}
               style={styles.input}
+              suppressHydrationWarning
             />
-            <button style={styles.addBtn} onClick={addTodo} aria-label="Add task">
+            <button style={styles.addBtn} onClick={addTodo} aria-label="Add task" suppressHydrationWarning>
               Add
             </button>
           </div>
