@@ -134,7 +134,9 @@ jobs:
         run: |
           git clone https://x-access-token:${TOKEN}@github.com/RedzoEbad/myapp-gitops.git
 
-          cd myapp-gitops/apps/myapp/overlays/dev
+          cd myapp-gitops/apps/myapp/base
+
+          ls -la
 
           sed -i "s/newTag:.*/newTag: ${GITHUB_SHA}/" kustomization.yaml
 
