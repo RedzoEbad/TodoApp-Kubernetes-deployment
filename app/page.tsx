@@ -97,16 +97,21 @@ export default function Home() {
 
   return (
     <main style={styles.page}>
+      {/* Decorative background elements */}
+      <div style={styles.glow1}></div>
+      <div style={styles.glow2}></div>
+
       <div style={styles.container}>
         <header style={styles.header}>
-          <h1 style={styles.title}>Todos</h1>
+          <h1 style={styles.title}>Task Mastery</h1>
+          <p style={styles.subtitle}>Streamline your day with precision</p>
         </header>
 
         <section style={styles.card}>
           <div style={styles.inputRow}>
             <input
               aria-label="New task"
-              placeholder="Add a task — press Enter or click Add"
+              placeholder="What needs to be done?"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               onKeyDown={(e) => {
@@ -116,7 +121,7 @@ export default function Home() {
               suppressHydrationWarning
             />
             <button style={styles.addBtn} onClick={addTodo} aria-label="Add task" suppressHydrationWarning>
-              Add
+              Add Task
             </button>
           </div>
 
@@ -124,7 +129,7 @@ export default function Home() {
             <table style={styles.table}>
               <thead>
                 <tr>
-                  <th style={styles.th}>Task</th>
+                  <th style={styles.th}>Task Description</th>
                   <th style={styles.th}>Created</th>
                   <th style={styles.th}>Status</th>
                   <th style={styles.th}>Actions</th>
@@ -133,12 +138,18 @@ export default function Home() {
               <tbody>
                 {loading && (
                   <tr>
-                    <td colSpan={4} style={styles.empty}>Loading…</td>
+                    <td colSpan={4} style={styles.empty}>
+                      <div className="animate-pulse">Loading workspace...</div>
+                    </td>
                   </tr>
                 )}
                 {!loading && todos.length === 0 && (
                   <tr>
-                    <td colSpan={4} style={styles.empty}>All clear — add your first todo ✨</td>
+                    <td colSpan={4} style={styles.empty}>
+                      <div style={{ opacity: 0.6, fontSize: '0.9rem' }}>
+                        No active tasks. Start by adding one above.
+                      </div>
+                    </td>
                   </tr>
                 )}
                 {todos.map((todo) => (
@@ -156,16 +167,43 @@ export default function Home() {
                           style={styles.editInput}
                         />
                       ) : (
-                        <span style={{ textDecoration: todo.done ? 'line-through' : 'none' }}>{todo.text}</span>
+                        <div style={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          gap: '10px',
+                          textDecoration: todo.done ? 'line-through' : 'none',
+                          color: todo.done ? 'rgba(255,255,255,0.4)' : '#fff'
+                        }}>
+                          <div style={{
+                            width: '4px',
+                            height: '16px',
+                            background: todo.done ? 'rgba(255,255,255,0.1)' : 'linear-gradient(#7c3aed, #ec4899)',
+                            borderRadius: '2px'
+                          }}></div>
+                          {todo.text}
+                        </div>
                       )}
                     </td>
-                    <td style={styles.td}>{todo.createdAt ? new Date(todo.createdAt).toLocaleDateString() : '-'}</td>
                     <td style={styles.td}>
-                      <input type="checkbox" checked={todo.done} onChange={() => toggle(todo.id)} />
+                      <span style={{ fontSize: '0.85rem', opacity: 0.7 }}>
+                        {todo.createdAt ? new Date(todo.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '-'}
+                      </span>
                     </td>
                     <td style={styles.td}>
-                      <button onClick={() => startEdit(todo.id)} style={styles.iconBtn}>Edit</button>
-                      <button onClick={() => remove(todo.id)} style={styles.deleteBtn}>Delete</button>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <input 
+                          type="checkbox" 
+                          checked={todo.done} 
+                          onChange={() => toggle(todo.id)} 
+                          style={styles.checkbox}
+                        />
+                      </div>
+                    </td>
+                    <td style={styles.td}>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button onClick={() => startEdit(todo.id)} style={styles.iconBtn}>Edit</button>
+                        <button onClick={() => remove(todo.id)} style={styles.deleteBtn}>Delete</button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -174,7 +212,9 @@ export default function Home() {
           </div>
         </section>
 
-       
+        <footer style={styles.footer}>
+          &copy; {new Date().getFullYear()} TodoApp &bull; Orchestrated via Kubernetes
+        </footer>
       </div>
     </main>
   );
@@ -186,73 +226,141 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    background: "linear-gradient(180deg,#0f172a 0%, #071024 40%)",
-    padding: "56px 20px",
-    fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue'",
+    background: "#020617",
+    padding: "40px 20px",
+    fontFamily: "'Inter', sans-serif",
+    position: "relative",
+    overflow: "hidden",
+  },
+  glow1: {
+    position: "absolute",
+    top: "-10%",
+    left: "-10%",
+    width: "40%",
+    height: "40%",
+    background: "radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%)",
+    zIndex: 0,
+  },
+  glow2: {
+    position: "absolute",
+    bottom: "-10%",
+    right: "-10%",
+    width: "50%",
+    height: "50%",
+    background: "radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, transparent 70%)",
+    zIndex: 0,
   },
   container: {
     width: "100%",
-    maxWidth: 920,
-    color: "#0f172a",
+    maxWidth: "800px",
+    zIndex: 1,
   },
-  header: { textAlign: "center", marginBottom: 22, color: "#f8fafc" },
-  title: { margin: 0, fontSize: 42, fontWeight: 700, letterSpacing: "-0.02em" },
-  subtitle: { margin: "8px 0 0", opacity: 0.9, color: "#cbd5e1" },
+  header: { textAlign: "center", marginBottom: "40px" },
+  title: { 
+    margin: 0, 
+    fontSize: "3.5rem", 
+    fontWeight: 800, 
+    letterSpacing: "-0.05em",
+    background: "linear-gradient(to right, #fff, #94a3b8)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+  },
+  subtitle: { 
+    margin: "10px 0 0", 
+    fontSize: "1.1rem", 
+    color: "#94a3b8",
+    fontWeight: 400 
+  },
   card: {
-    background: "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))",
-    borderRadius: 14,
-    padding: 22,
-    boxShadow: "0 8px 30px rgba(2,6,23,0.6)",
-    backdropFilter: "blur(6px)",
-    border: "1px solid rgba(255,255,255,0.04)",
+    background: "rgba(15, 23, 42, 0.6)",
+    borderRadius: "24px",
+    padding: "32px",
+    boxShadow: "0 20px 50px rgba(0, 0, 0, 0.3)",
+    backdropFilter: "blur(12px)",
+    border: "1px solid rgba(255, 255, 255, 0.08)",
   },
-  inputRow: { display: "flex", gap: 12, marginBottom: 12 },
+  inputRow: { display: "flex", gap: "12px", marginBottom: "32px" },
   input: {
     flex: 1,
-    padding: "14px 16px",
-    borderRadius: 12,
-    border: "1px solid rgba(15,23,42,0.06)",
+    padding: "16px 20px",
+    borderRadius: "16px",
+    border: "1px solid rgba(255, 255, 255, 0.1)",
     outline: "none",
-    fontSize: 16,
-    background: "rgba(255,255,255,0.96)",
-    boxShadow: "inset 0 1px 2px rgba(2,6,23,0.04)",
+    fontSize: "1rem",
+    background: "rgba(2, 6, 23, 0.4)",
+    color: "#fff",
+    transition: "all 0.2s ease",
   },
   addBtn: {
-    minWidth: 84,
-    padding: "10px 14px",
-    borderRadius: 10,
+    padding: "0 28px",
+    borderRadius: "16px",
     border: "none",
-    background: "linear-gradient(90deg,#06b6d4,#7c3aed)",
+    background: "linear-gradient(135deg, #7c3aed 0%, #ec4899 100%)",
     color: "#fff",
-    fontSize: 15,
+    fontSize: "0.95rem",
     fontWeight: 600,
     cursor: "pointer",
-    boxShadow: "0 6px 18px rgba(124,58,237,0.18)",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
   },
-  list: { listStyle: "none", margin: 0, padding: 0, maxHeight: 420, overflow: "auto" },
-  item: {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-    padding: "12px 14px",
-    borderRadius: 10,
-    marginBottom: 10,
-    background: "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))",
-    transition: "transform .14s ease, opacity .12s ease, box-shadow .14s ease",
-    boxShadow: "0 4px 14px rgba(2,6,23,0.16)",
+  table: { width: '100%', borderCollapse: 'separate', borderSpacing: '0 8px' },
+  th: { 
+    textAlign: 'left', 
+    padding: '0 16px 12px', 
+    color: '#64748b', 
+    fontSize: '0.75rem', 
+    textTransform: 'uppercase', 
+    letterSpacing: '0.05em' 
   },
-  itemLeft: { width: 28, display: "flex", alignItems: "center", justifyContent: "center" },
-  checkbox: { width: 18, height: 18, cursor: "pointer" },
-  content: { flex: 1, minWidth: 0 },
-  text: { display: "block", fontSize: 16, color: "#e6eef8", lineHeight: 1.4 },
-  editInput: { width: "100%", padding: "8px 10px", borderRadius: 8, border: "none" },
-  actions: { display: "flex", gap: 8 },
-  iconBtn: { background: "transparent", border: "none", color: "#cbd5e1", cursor: "pointer", padding: 6, borderRadius: 8 },
-  deleteBtn: { background: "transparent", border: "none", color: "#ffb4b4", cursor: "pointer", padding: 6, borderRadius: 8 },
-  empty: { padding: 20, textAlign: "center", color: "#e6eef6" },
-  footer: { marginTop: 14, textAlign: "center", color: "#cbd5e1", opacity: 0.9, fontSize: 13 },
-  table: { width: '100%', borderCollapse: 'collapse', minWidth: 640 },
-  th: { textAlign: 'left', padding: '10px 12px', color: '#94a3b8', fontSize: 13, borderBottom: '1px solid rgba(255,255,255,0.04)' },
-  td: { padding: '10px 12px', verticalAlign: 'middle', borderBottom: '1px solid rgba(255,255,255,0.03)', color: '#e6eef8' },
-  row: { background: 'transparent' },
+  td: { 
+    padding: '16px', 
+    verticalAlign: 'middle', 
+    background: 'rgba(255, 255, 255, 0.03)',
+    color: '#f1f5f9',
+  },
+  row: { 
+    transition: 'transform 0.2s ease',
+  },
+  checkbox: { 
+    width: '20px', 
+    height: '20px', 
+    cursor: 'pointer',
+    accentColor: '#7c3aed',
+  },
+  editInput: { 
+    width: "100%", 
+    padding: "10px 14px", 
+    borderRadius: "12px", 
+    border: "1px solid #7c3aed",
+    background: "#020617",
+    color: "#fff",
+    outline: "none"
+  },
+  iconBtn: { 
+    background: "rgba(255, 255, 255, 0.05)", 
+    border: "none", 
+    color: "#94a3b8", 
+    cursor: "pointer", 
+    padding: "8px 12px", 
+    borderRadius: "10px",
+    fontSize: "0.85rem",
+    transition: "all 0.2s"
+  },
+  deleteBtn: { 
+    background: "rgba(239, 68, 68, 0.1)", 
+    border: "none", 
+    color: "#f87171", 
+    cursor: "pointer", 
+    padding: "8px 12px", 
+    borderRadius: "10px",
+    fontSize: "0.85rem",
+    transition: "all 0.2s"
+  },
+  empty: { padding: "40px", textAlign: "center", color: "#64748b" },
+  footer: { 
+    marginTop: "32px", 
+    textAlign: "center", 
+    color: "#475569", 
+    fontSize: "0.85rem",
+    letterSpacing: "0.02em"
+  },
 };
