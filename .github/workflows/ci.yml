@@ -128,19 +128,19 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/my-todo-app:${{ github.sha }}
 
-      # =========================
-      # 15. UPDATE GITOPS REPO (CRITICAL FIX)
-      # =========================
       - name: Update GitOps repo (Argo CD sync trigger)
+        env:
+          TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git clone https://github.com/RedzoEbad/myapp-gitops.git
+          git clone https://x-access-token:${TOKEN}@github.com/RedzoEbad/myapp-gitops.git
+
           cd myapp-gitops/apps/myapp/overlays/dev
 
-          sed -i "s/newTag:.*/newTag: ${{ github.sha }}/" kustomization.yaml
+          sed -i "s/newTag:.*/newTag: ${GITHUB_SHA}/" kustomization.yaml
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
           git add .
-          git commit -m "update image tag ${{ github.sha }}"
-          git push
+          git commit -m "update image tag ${GITHUB_SHA}"
+          git push origin main
